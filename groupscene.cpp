@@ -29,10 +29,10 @@ bool GroupScene::appendItem(QGraphicsItem *item)
     return er.ReturnResult( NO_error );
 }
 
-void GroupScene::appendItemToNewGroup(QGraphicsItem *item)
+bool GroupScene::appendItemToNewGroup(QGraphicsItem *item)
 {
     newGroup();
-    appendItem( item );
+    return appendItem( item );
 }
 
 bool GroupScene::setGroupVisible(int index, bool visible)
@@ -104,4 +104,10 @@ int GroupScene::groupCount() const
 void GroupScene::slot_error()
 {
     emit SignalError( er );
+}
+
+void GroupScene::clear()
+{
+    deleteGroupsFromIndex(0);
+    QGraphicsScene::clear();
 }

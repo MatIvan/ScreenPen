@@ -12,6 +12,8 @@ public:
     GraphicsSceneController( QObject *parent = 0 );
     virtual ~GraphicsSceneController();
 
+    bool grab_desktop();
+
 private:
     void mousePressEvent    (QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent     (QGraphicsSceneMouseEvent *event);

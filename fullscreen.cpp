@@ -1,8 +1,6 @@
 #include "fullscreen.h"
 
-#include <QScreen>
-#include <QApplication>
-#include <QDesktopWidget>
+
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QDialog>
@@ -24,8 +22,7 @@ FullScreen::FullScreen(QWidget *parent)
     connect (tools, SIGNAL( closeToolPanel() ),
              this,  SLOT  ( close()          ) );
 
-    this->showFullScreen();
-    tools->show();
+    start();
 }
 
 FullScreen::~FullScreen()
@@ -33,15 +30,23 @@ FullScreen::~FullScreen()
 
 }
 
+void FullScreen::start()
+{
+    stop();
+    controller->grab_desktop();
+    showFullScreen();
+    tools->show();
+}
+
+void FullScreen::stop()
+{
+    tools->hide();
+    hide();
+    controller->clear();
+}
+
 void FullScreen::slot_Error(const ErrorClass &error)
 {
     qDebug() << "Error: " << error.lastError();
 }
 
-//void FullScreen::grab_desktop()
-//{
-//    hide();
-//    QScreen *screen = QApplication::primaryScreen();
-//    desktop_pixmap = screen->grabWindow(QApplication::desktop()->winId());
-//    show();
-//}

@@ -22,7 +22,7 @@ public:
 
     void newGroup();
     bool appendItem( QGraphicsItem *item );
-    void appendItemToNewGroup( QGraphicsItem *item );
+    bool appendItemToNewGroup( QGraphicsItem *item );
 
     bool setGroupVisible( int index, bool visible );
     bool setGroupVisible( QGraphicsItemGroup* group, bool visible );
@@ -43,6 +43,9 @@ protected:
 
 private slots:
     void slot_error();
+
+public slots:
+    void clear();
 
 signals:
     void SignalError( const ErrorClass &error);

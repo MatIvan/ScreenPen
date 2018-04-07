@@ -26,6 +26,8 @@ private:
 public slots:
     void slot_Error(const ErrorClass &error );
 
+    void start();
+    void stop();
 
 };
 
