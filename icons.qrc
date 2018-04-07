@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="back">png/back.png</file>
+        <file alias="brash">png/brash.png</file>
+        <file alias="circle">png/circle.png</file>
+        <file alias="delete">png/delete.png</file>
+        <file alias="save">png/download.png</file>
+        <file alias="exit">png/exit.png</file>
+        <file alias="forward">png/forward.png</file>
+        <file alias="line">png/line.png</file>
+        <file alias="options">png/option.png</file>
+        <file alias="pen">png/pen.png</file>
+        <file alias="rectangle">png/rectangle.png</file>
+        <file alias="eraser">png/eraser.png</file>
+    </qresource>
+</RCC>
