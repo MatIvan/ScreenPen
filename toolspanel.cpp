@@ -1,5 +1,5 @@
 #include "toolspanel.h"
-
+#include <QDebug>
 #include <QHBoxLayout>
 
 
@@ -45,28 +45,32 @@ ToolsPanel::ToolsPanel(QWidget *parent, Qt::WindowFlags f)
     pBtn_clear->setToolTip( "Clear - delete all shapes and markers.");
 
     QButtonGroup *pGrouBtn = new QButtonGroup(this);
-    pGrouBtn->addButton( pBtn_pen,    1 );
-    pGrouBtn->addButton( pBtn_brash,  2 );
-    pGrouBtn->addButton( pBtn_line,   3 );
-    pGrouBtn->addButton( pBtn_rect,   4 );
-    pGrouBtn->addButton( pBtn_circle, 5 );
-    pGrouBtn->addButton( pBtn_eraser, 6 );
+    pGrouBtn->addButton( pBtn_pen,    ToolsID::tool_pen    );
+    pGrouBtn->addButton( pBtn_brash,  ToolsID::tool_brash  );
+    pGrouBtn->addButton( pBtn_line,   ToolsID::tool_line   );
+    pGrouBtn->addButton( pBtn_rect,   ToolsID::tool_rect   );
+    pGrouBtn->addButton( pBtn_circle, ToolsID::tool_circle );
+    pGrouBtn->addButton( pBtn_eraser, ToolsID::tool_eraser );
     pBtn_pen->setChecked( true );
 
     QHBoxLayout *lay = new QHBoxLayout( this );
-    lay->addWidget( pBtn_pen );
-    lay->addWidget( pBtn_brash );
-    lay->addWidget( pBtn_line );
-    lay->addWidget( pBtn_rect );
+    lay->addWidget( pBtn_pen    );
+    lay->addWidget( pBtn_brash  );
+    lay->addWidget( pBtn_line   );
+    lay->addWidget( pBtn_rect   );
     lay->addWidget( pBtn_circle );
     lay->addWidget( pBtn_eraser );
     lay->addSpacing(20);
-    lay->addWidget( pBtn_undo );
-    lay->addWidget( pBtn_redo );
-    lay->addWidget( pBtn_save );
-    lay->addWidget( pBtn_clear );
+    lay->addWidget( pBtn_undo   );
+    lay->addWidget( pBtn_redo   );
+    lay->addWidget( pBtn_save   );
+    lay->addWidget( pBtn_clear  );
 
     this->setLayout( lay );
+
+    connect(pGrouBtn, QOverload<int, bool>::of(&QButtonGroup::buttonToggled),
+          [=](int id, bool checked){ ToolToggled(id, checked); });
+
 }
 
 ToolsPanel::~ToolsPanel()
@@ -74,7 +78,12 @@ ToolsPanel::~ToolsPanel()
 
 }
 
-void ToolsPanel::closeEvent(QCloseEvent *event)
+void ToolsPanel::ToolToggled(int id, bool checked)
+{
+    if ( checked ) emit changedTool( id );
+}
+
+void ToolsPanel::closeEvent(QCloseEvent *)
 {
     emit closeToolPanel();
 }

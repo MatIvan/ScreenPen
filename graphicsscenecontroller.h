@@ -3,6 +3,7 @@
 
 #include <QGraphicsSceneMouseEvent>
 #include "groupscene.h"
+#include "toolspanel.h"
 
 
 class GraphicsSceneController : public GroupScene
@@ -21,7 +22,10 @@ private:
 
 private:
     QPointF previousPoint;
+    int currentTool;
 
+public slots:
+    void setTool( int id );
 };
 
 #endif // GRAPHICSSCENECONTROLLER_H

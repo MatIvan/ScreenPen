@@ -5,6 +5,16 @@
 #include <QPushButton>
 #include <QButtonGroup>
 
+enum ToolsID {
+    tool_non = 0,
+    tool_pen,
+    tool_brash,
+    tool_line,
+    tool_rect,
+    tool_circle,
+    tool_eraser
+};
+
 class ToolsPanel : public QWidget
 {
     Q_OBJECT
@@ -28,11 +38,14 @@ private:
     QPushButton *pBtn_save;
     QPushButton *pBtn_clear;
 
+    void ToolToggled(int id, bool checked);
+
 protected:
-    virtual void closeEvent(QCloseEvent *event) override;
+    virtual void closeEvent(QCloseEvent *) override;
 
 signals:
     void closeToolPanel();
+    void changedTool( int id );
 
 public slots:
 

@@ -23,11 +23,15 @@ private:
     QGraphicsView           *viewer;
     GraphicsSceneController *controller;
 
+    QCursor makeCursor(const QString &file , int hot_x, int hot_y);
+
 public slots:
     void slot_Error(const ErrorClass &error );
 
     void start();
     void stop();
+
+    void changeCursor( int tool_id );
 
 };
 

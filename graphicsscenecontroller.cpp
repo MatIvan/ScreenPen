@@ -7,7 +7,7 @@
 GraphicsSceneController::GraphicsSceneController(QObject *parent)
     : GroupScene( parent )
 {
-
+    currentTool = ToolsID::tool_non;
 }
 
 GraphicsSceneController::~GraphicsSceneController()
@@ -54,4 +54,9 @@ void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void GraphicsSceneController::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 
+}
+
+void GraphicsSceneController::setTool(int id)
+{
+    currentTool = id;
 }

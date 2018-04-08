@@ -12,5 +12,6 @@
         <file alias="pen">png/pen.png</file>
         <file alias="rectangle">png/rectangle.png</file>
         <file alias="eraser">png/eraser.png</file>
+        <file alias="square">png/square.png</file>
     </qresource>
 </RCC>
