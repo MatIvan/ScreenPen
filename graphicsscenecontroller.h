@@ -18,11 +18,19 @@ public:
 private:
     void mousePressEvent    (QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent     (QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent  (QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent  (QGraphicsSceneMouseEvent *);
+
+    QGraphicsItem *get_pen_firstItem();
+    QGraphicsItem *get_pen_newItem(const QPointF &newPoint );
+
+    QGraphicsItem *get_brash_firstItem();
+    QGraphicsItem *get_barsh_newItem(const QPointF &newPoint );
 
 private:
     QPointF previousPoint;
+    QPointF firstPoint;
     int currentTool;
+    QGraphicsItem *currentItem;
 
 public slots:
     void setTool( int id );

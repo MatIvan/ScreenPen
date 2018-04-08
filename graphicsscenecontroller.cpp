@@ -7,7 +7,7 @@
 GraphicsSceneController::GraphicsSceneController(QObject *parent)
     : GroupScene( parent )
 {
-    currentTool = ToolsID::tool_non;
+    currentTool = ToolsID::tool_pen;
 }
 
 GraphicsSceneController::~GraphicsSceneController()
@@ -31,29 +31,87 @@ bool GraphicsSceneController::grab_desktop()
 
 void GraphicsSceneController::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem *temp_item;
-    temp_item = new QGraphicsEllipseItem(event->scenePos().x() - 5,
-                           event->scenePos().y() - 5,
-                           10,
-                           10);
-    appendItemToNewGroup( temp_item );
-    previousPoint = event->scenePos();
+    firstPoint = event->scenePos();
+    previousPoint = firstPoint;
+
+    switch( currentTool ){
+    case ToolsID::tool_pen :
+                            appendItemToNewGroup( get_pen_firstItem() );
+                            break;
+    case ToolsID::tool_brash :
+                            appendItemToNewGroup( get_brash_firstItem() );
+                            break;
+    default:
+        er.ReturnResult( IS_error, "GraphicsSceneController: Start drawing: Invalid tool.");
+    }
+
 }
 
 void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem *temp_item;
-    temp_item = new QGraphicsLineItem(  previousPoint.x(),
-                                        previousPoint.y(),
-                                        event->scenePos().x(),
-                                        event->scenePos().y());
-    appendItem( temp_item );
+    QPointF newPos = event->scenePos();
+
+    switch( currentTool ){
+    case ToolsID::tool_pen :
+                            appendItem( get_pen_newItem( newPos ) );
+                            break;
+    case ToolsID::tool_brash :
+                            removeItem( currentItem );
+                            appendItem( get_barsh_newItem( newPos ) );
+                            break;
+    default:
+        er.ReturnResult( IS_error, "GraphicsSceneController: Drawing in process: Invalid tool.");
+    }
+
+
     previousPoint = event->scenePos();
 }
 
-void GraphicsSceneController::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void GraphicsSceneController::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
 
+}
+
+QGraphicsItem *GraphicsSceneController::get_pen_firstItem()
+{
+    QGraphicsItem *temp_item;
+    temp_item = new QGraphicsLineItem( previousPoint.x(),     previousPoint.y(),
+                                       previousPoint.x() + 1, previousPoint.y() + 1);
+    return temp_item;
+}
+
+QGraphicsItem *GraphicsSceneController::get_pen_newItem(const QPointF &newPoint)
+{
+    QGraphicsItem *temp_item;
+    temp_item = new QGraphicsLineItem( previousPoint.x(), previousPoint.y(),
+                                       newPoint.x(),      newPoint.y() );
+    return temp_item;
+}
+
+QGraphicsItem *GraphicsSceneController::get_brash_firstItem()
+{
+    QGraphicsLineItem *line;
+    line = new QGraphicsLineItem(firstPoint.x(),   firstPoint.y(),
+                                 firstPoint.x()+1, firstPoint.y()+1 );
+    QPen pen;
+    pen.setWidth(16);
+    pen.setColor( QColor(0,0,0,100) );
+    line->setPen(pen);
+    currentItem = line;
+    return currentItem;
+}
+
+QGraphicsItem *GraphicsSceneController::get_barsh_newItem(const QPointF &newPoint)
+{
+    QGraphicsLineItem *line;
+    line = new QGraphicsLineItem(firstPoint.x(), firstPoint.y(),
+                                 newPoint.x(),   newPoint.y() );
+    QPen pen;
+    pen.setWidth(16);
+    pen.setColor( QColor(0,0,0,100) );
+    line->setPen(pen);
+    currentItem = line;
+    return currentItem;
 }
 
 void GraphicsSceneController::setTool(int id)
