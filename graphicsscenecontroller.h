@@ -21,10 +21,13 @@ private:
     void mouseReleaseEvent  (QGraphicsSceneMouseEvent *);
 
     QGraphicsItem *get_pen_firstItem();
-    QGraphicsItem *get_pen_newItem(const QPointF &newPoint );
-
+    QGraphicsItem *get_pen_newItem( const QPointF &newPoint );
     QGraphicsItem *get_brash_firstItem();
-    QGraphicsItem *get_barsh_newItem(const QPointF &newPoint );
+    QGraphicsItem *get_line_firstItem();
+    QGraphicsItem *get_rect_firstItem();
+
+    void set_Line_Item_points( QGraphicsItem *Item, const QPointF &strat, const QPointF &finish );
+    void set_Rect_Item_points( QGraphicsItem *Item, const QPointF &strat, const QPointF &finish );
 
 private:
     QPointF previousPoint;

@@ -41,6 +41,12 @@ void GraphicsSceneController::mousePressEvent(QGraphicsSceneMouseEvent *event)
     case ToolsID::tool_brash :
                             appendItemToNewGroup( get_brash_firstItem() );
                             break;
+    case ToolsID::tool_line :
+                            appendItemToNewGroup( get_line_firstItem() );
+                            break;
+    case ToolsID::tool_rect :
+                            appendItemToNewGroup( get_rect_firstItem() );
+                            break;
     default:
         er.ReturnResult( IS_error, "GraphicsSceneController: Start drawing: Invalid tool.");
     }
@@ -56,8 +62,11 @@ void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                             appendItem( get_pen_newItem( newPos ) );
                             break;
     case ToolsID::tool_brash :
-                            removeItem( currentItem );
-                            appendItem( get_barsh_newItem( newPos ) );
+    case ToolsID::tool_line :
+                            set_Line_Item_points( currentItem, firstPoint, newPos );
+                            break;
+    case ToolsID::tool_rect :
+                            set_Rect_Item_points( currentItem, firstPoint, newPos );
                             break;
     default:
         er.ReturnResult( IS_error, "GraphicsSceneController: Drawing in process: Invalid tool.");
@@ -75,24 +84,21 @@ void GraphicsSceneController::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 QGraphicsItem *GraphicsSceneController::get_pen_firstItem()
 {
     QGraphicsItem *temp_item;
-    temp_item = new QGraphicsLineItem( previousPoint.x(),     previousPoint.y(),
-                                       previousPoint.x() + 1, previousPoint.y() + 1);
+    temp_item = new QGraphicsLineItem( QLineF( previousPoint, previousPoint ) );
     return temp_item;
 }
 
 QGraphicsItem *GraphicsSceneController::get_pen_newItem(const QPointF &newPoint)
 {
     QGraphicsItem *temp_item;
-    temp_item = new QGraphicsLineItem( previousPoint.x(), previousPoint.y(),
-                                       newPoint.x(),      newPoint.y() );
+    temp_item = new QGraphicsLineItem( QLineF( previousPoint, newPoint ) );
     return temp_item;
 }
 
 QGraphicsItem *GraphicsSceneController::get_brash_firstItem()
 {
     QGraphicsLineItem *line;
-    line = new QGraphicsLineItem(firstPoint.x(),   firstPoint.y(),
-                                 firstPoint.x()+1, firstPoint.y()+1 );
+    line = new QGraphicsLineItem( QLineF( previousPoint, previousPoint ) );
     QPen pen;
     pen.setWidth(16);
     pen.setColor( QColor(0,0,0,100) );
@@ -101,17 +107,32 @@ QGraphicsItem *GraphicsSceneController::get_brash_firstItem()
     return currentItem;
 }
 
-QGraphicsItem *GraphicsSceneController::get_barsh_newItem(const QPointF &newPoint)
+QGraphicsItem *GraphicsSceneController::get_line_firstItem()
 {
     QGraphicsLineItem *line;
-    line = new QGraphicsLineItem(firstPoint.x(), firstPoint.y(),
-                                 newPoint.x(),   newPoint.y() );
-    QPen pen;
-    pen.setWidth(16);
-    pen.setColor( QColor(0,0,0,100) );
-    line->setPen(pen);
+    line = new QGraphicsLineItem( QLineF( firstPoint, firstPoint ) );
     currentItem = line;
     return currentItem;
+}
+
+QGraphicsItem *GraphicsSceneController::get_rect_firstItem()
+{
+    QGraphicsRectItem *rect;
+    rect = new QGraphicsRectItem(firstPoint.x(), firstPoint.y(), 0, 0 );
+    currentItem = rect;
+    return currentItem;
+}
+
+void GraphicsSceneController::set_Line_Item_points( QGraphicsItem *Item, const QPointF &start, const QPointF &finish)
+{
+    QGraphicsLineItem *L = (QGraphicsLineItem*)(Item);
+    L->setLine( QLineF( start, finish ) );
+}
+
+void GraphicsSceneController::set_Rect_Item_points(QGraphicsItem *Item, const QPointF &start, const QPointF &finish)
+{
+    QGraphicsRectItem *R = (QGraphicsRectItem*)(Item);
+    R->setRect( QRectF( start, finish ).normalized() );
 }
 
 void GraphicsSceneController::setTool(int id)
