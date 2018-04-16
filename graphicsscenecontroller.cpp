@@ -10,7 +10,8 @@ GraphicsSceneController::GraphicsSceneController(QObject *parent)
     currentTool = ToolsID::tool_pen;
 
     currentPen.setColor( QColor("red") );
-    currentPen.setWidth( 5 );
+    currentPen.setWidth( 4 );
+    currentPen.setCapStyle( Qt::RoundCap );
 }
 
 GraphicsSceneController::~GraphicsSceneController()
@@ -171,4 +172,5 @@ void GraphicsSceneController::setTool(int id)
 void GraphicsSceneController::setPen(QPen new_pen)
 {
     currentPen = new_pen;
+    currentPen.setCapStyle( Qt::RoundCap );
 }

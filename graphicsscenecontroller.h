@@ -36,6 +36,7 @@ private:
     QPointF firstPoint;
     int currentTool;
     QGraphicsItem *currentItem;
+
     QPen currentPen;
 
 public slots:

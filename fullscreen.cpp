@@ -15,7 +15,7 @@ FullScreen::FullScreen(QWidget *parent)
 
     viewer = new QGraphicsView( this );
     viewer->setScene( controller );
-    setCentralWidget( viewer );
+
     controller->setSceneRect(0,0, viewer->width() - 20, viewer->height() - 20);
 
     tools = new ToolsPanel( this, Qt::Tool );
@@ -31,6 +31,7 @@ FullScreen::FullScreen(QWidget *parent)
     connect (tools,      SIGNAL( changedPen(QPen) ),
              controller, SLOT( setPen(QPen)       ) );
 
+    setCentralWidget( viewer );
     start();
     changeCursor( ToolsID::tool_pen );
 }
