@@ -29,14 +29,16 @@ SOURCES += \
     groupscene.cpp \
     errorclass.cpp \
     graphicsscenecontroller.cpp \
-    toolspanel.cpp
+    toolspanel.cpp \
+    comboboxcolor.cpp
 
 HEADERS += \
     fullscreen.h \
     groupscene.h \
     errorclass.h \
     graphicsscenecontroller.h \
-    toolspanel.h
+    toolspanel.h \
+    comboboxcolor.h
 
 RESOURCES += \
     icons.qrc
