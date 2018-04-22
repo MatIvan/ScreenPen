@@ -2,10 +2,8 @@
 #define GRAPHICSSCENECONTROLLER_H
 
 #include <QGraphicsSceneMouseEvent>
-#include <QTimer>
 #include "groupscene.h"
 #include "toolspanel.h"
-#include "hovergraphicsitem.h"
 
 
 class GraphicsSceneController : public GroupScene
@@ -38,13 +36,12 @@ private:
     QPointF firstPoint;
     int currentTool;
     QGraphicsItem *currentItem;
+
     QPen currentPen;
-    bool isAllowPaint;
 
 public slots:
     void setTool( int id );
     void setPen( QPen new_pen );
-
 };
 
 #endif // GRAPHICSSCENECONTROLLER_H

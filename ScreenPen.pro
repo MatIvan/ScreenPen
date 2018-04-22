@@ -30,8 +30,7 @@ SOURCES += \
     errorclass.cpp \
     graphicsscenecontroller.cpp \
     toolspanel.cpp \
-    comboboxcolor.cpp \
-    hovergraphicsitem.cpp
+    comboboxcolor.cpp
 
 HEADERS += \
     fullscreen.h \
@@ -39,8 +38,7 @@ HEADERS += \
     errorclass.h \
     graphicsscenecontroller.h \
     toolspanel.h \
-    comboboxcolor.h \
-    hovergraphicsitem.h
+    comboboxcolor.h
 
 RESOURCES += \
     icons.qrc

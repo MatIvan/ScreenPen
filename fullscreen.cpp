@@ -51,7 +51,7 @@ void FullScreen::start()
 {
     stop();
     controller->grab_desktop();
-    //showFullScreen();
+    showFullScreen();
     tools->show();
 }
 
