@@ -55,6 +55,8 @@ signals:
     void closeToolPanel();
     void changedTool( int id );
     void changedPen( QPen new_pen );
+    void undo();
+    void redo();
 
 public slots:
 

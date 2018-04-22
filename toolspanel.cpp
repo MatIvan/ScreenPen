@@ -97,6 +97,10 @@ ToolsPanel::ToolsPanel(QWidget *parent, Qt::WindowFlags f)
             this, SLOT(PenChanged()) );
     connect(pCB_width , SIGNAL(currentTextChanged(QString)) ,
             this, SLOT(PenChanged()) );
+    connect(pBtn_undo, SIGNAL(clicked()),
+            this, SIGNAL(undo()) );
+    connect(pBtn_redo, SIGNAL(clicked()),
+            this, SIGNAL(redo()) );
 }
 
 ToolsPanel::~ToolsPanel()

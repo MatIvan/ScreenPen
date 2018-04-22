@@ -110,6 +110,8 @@ void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void GraphicsSceneController::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
     isAllowPaint = false;
+
+
 }
 
 QGraphicsItem *GraphicsSceneController::get_pen_firstItem()

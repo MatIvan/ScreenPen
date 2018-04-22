@@ -1,10 +1,14 @@
 #include "groupscene.h"
 
 GroupScene::GroupScene(QObject *parent)
-    : QGraphicsScene( parent )
+    : QGraphicsScene( parent ),
+      GAList()
 {
     connect( &er,  SIGNAL( er_SignalError() ),
              this, SLOT  ( slot_error()     ) );
+
+    connect( &GAList, SIGNAL( delete_forever( QGraphicsItemGroup* ) ),
+             this, SLOT( deleteGroup( QGraphicsItemGroup* ) ) );
 
     er.ReturnResult( NO_error );
 }
@@ -19,6 +23,7 @@ void GroupScene::newGroup()
     pCurrentGroup = createItemGroup( QList<QGraphicsItem*>() );
     pCurrentGroup->setAcceptHoverEvents( true );
     groups_list.append( pCurrentGroup );
+    GAList.AddGroupAction( CREATE, pCurrentGroup );
 }
 
 bool GroupScene::appendItem(QGraphicsItem *item)
@@ -54,13 +59,16 @@ bool GroupScene::setGroupVisible(QGraphicsItemGroup *group, bool visible)
     for( int i=0; i<group_items.size(); i++ ){
         group_items.at(i)->setVisible( visible );
     }
+    if (!visible){
+        GAList.AddGroupAction( DELETE, group );
+    }
     return er.ReturnResult( NO_error );
 }
 
-bool GroupScene::deleteGroup(QGraphicsItemGroup *group)
+void GroupScene::deleteGroup(QGraphicsItemGroup *group)
 {
     if ( !groups_list.contains( group ) )
-        return er.ReturnResult( IS_error , " GroupScene: Cannot delete group. Have no this group in list. ");
+        return;
 
     QList<QGraphicsItem*> group_items = group->childItems();
     for( int i=0; i<group_items.size(); i++ ){
@@ -68,7 +76,6 @@ bool GroupScene::deleteGroup(QGraphicsItemGroup *group)
     }
     groups_list.removeOne( group );
     destroyItemGroup( group );
-    return er.ReturnResult( NO_error );
 }
 
 bool GroupScene::deleteGroup(int index)
@@ -82,7 +89,8 @@ bool GroupScene::deleteGroup(int index)
 
 bool GroupScene::deleteLastGroup()
 {
-    return deleteGroup( groups_list.last() );
+    deleteGroup( groups_list.last() );
+    return true;
 }
 
 bool GroupScene::deleteGroupsFromIndex(int index)
@@ -134,4 +142,14 @@ void GroupScene::clear()
 {
     deleteGroupsFromIndex(0);
     QGraphicsScene::clear();
+}
+
+void GroupScene::undo()
+{
+    GAList.undo();
+}
+
+void GroupScene::redo()
+{
+    GAList.redo();
 }

@@ -31,6 +31,9 @@ FullScreen::FullScreen(QWidget *parent)
     connect (tools,      SIGNAL( changedPen(QPen) ),
              controller, SLOT( setPen(QPen)       ) );
 
+    connect( tools, SIGNAL(undo()), controller, SLOT(undo()) );
+    connect( tools, SIGNAL(redo()), controller, SLOT(redo()) );
+
     setCentralWidget( viewer );
     start();
     changeCursor( ToolsID::tool_pen );

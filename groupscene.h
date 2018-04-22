@@ -9,6 +9,7 @@
 #include <QObject>
 
 #include "errorclass.h"
+#include "groupactionlist.h"
 
 class ErrorClass;
 
@@ -27,7 +28,6 @@ public:
     bool setGroupVisible( int index, bool visible );
     bool setGroupVisible( QGraphicsItemGroup* group, bool visible );
 
-    bool deleteGroup( QGraphicsItemGroup* group );
     bool deleteGroup( int index );
     bool deleteLastGroup();
     bool deleteGroupsFromIndex( int index ); //Удалить все группы от индекса до последней
@@ -41,6 +41,7 @@ private:
     QList<QGraphicsItemGroup*>   groups_list;
     QGraphicsItemGroup          *pCurrentGroup;
     QGraphicsItemGroup          *pSelectedGroup;
+    GroupActionList             GAList;
 
     void set_select ( QList<QGraphicsItem*> group_items, bool sel );
 
@@ -50,9 +51,12 @@ protected:
 
 private slots:
     void slot_error();
+    void deleteGroup( QGraphicsItemGroup* group );
 
 public slots:
     void clear();
+    void undo();
+    void redo();
 
 signals:
     void SignalError( const ErrorClass &error);

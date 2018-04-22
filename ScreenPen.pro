@@ -31,7 +31,8 @@ SOURCES += \
     graphicsscenecontroller.cpp \
     toolspanel.cpp \
     comboboxcolor.cpp \
-    mygraphicsitems.cpp
+    mygraphicsitems.cpp \
+    groupactionlist.cpp
 
 HEADERS += \
     fullscreen.h \
@@ -40,7 +41,8 @@ HEADERS += \
     graphicsscenecontroller.h \
     toolspanel.h \
     comboboxcolor.h \
-    mygraphicsitems.h
+    mygraphicsitems.h \
+    groupactionlist.h
 
 RESOURCES += \
     icons.qrc
