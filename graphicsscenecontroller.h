@@ -2,6 +2,7 @@
 #define GRAPHICSSCENECONTROLLER_H
 
 #include <QGraphicsSceneMouseEvent>
+#include <QTimer>
 #include "groupscene.h"
 #include "toolspanel.h"
 
@@ -36,8 +37,9 @@ private:
     QPointF firstPoint;
     int currentTool;
     QGraphicsItem *currentItem;
-
     QPen currentPen;
+
+    bool isAllowPaint;
 
 public slots:
     void setTool( int id );

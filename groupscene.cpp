@@ -17,6 +17,7 @@ GroupScene::~GroupScene()
 void GroupScene::newGroup()
 {
     pCurrentGroup = createItemGroup( QList<QGraphicsItem*>() );
+    pCurrentGroup->setAcceptHoverEvents( true );
     groups_list.append( pCurrentGroup );
 }
 
@@ -96,9 +97,32 @@ bool GroupScene::deleteGroupsFromIndex(int index)
     return er.ReturnResult( NO_error );
 }
 
+bool GroupScene::selectGroup(QGraphicsItemGroup *gr)
+{
+    bool result = false;
+
+    if (pSelectedGroup){
+        set_select( pSelectedGroup->childItems(), false );
+        result = true;
+    }
+    pSelectedGroup = gr;
+    if (gr == 0) return result;
+    set_select( pSelectedGroup->childItems(), true );
+    result = true;
+
+    return result;
+}
+
 int GroupScene::groupCount() const
 {
     return groups_list.size();
+}
+
+void GroupScene::set_select(QList<QGraphicsItem *> group_items, bool sel)
+{
+    for( int i=0; i<group_items.size(); i++ ){
+       group_items.at(i)->setData( 1, sel );
+    }
 }
 
 void GroupScene::slot_error()

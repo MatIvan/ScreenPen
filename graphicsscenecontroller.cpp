@@ -3,10 +3,15 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QScreen>
+#include <QDebug>
+
+#include "mygraphicsitems.h"
 
 GraphicsSceneController::GraphicsSceneController(QObject *parent)
     : GroupScene( parent )
 {
+    isAllowPaint = false;
+
     currentTool = ToolsID::tool_pen;
 
     currentPen.setColor( QColor("red") );
@@ -54,14 +59,19 @@ void GraphicsSceneController::mousePressEvent(QGraphicsSceneMouseEvent *event)
     case ToolsID::tool_circle :
                             appendItemToNewGroup( get_elips_firstItem() );
                             break;
+    case ToolsID::tool_eraser :
+                            if (GetSelectedGroup()) setGroupVisible( GetSelectedGroup(), false );
+                            break;
     default:
         er.ReturnResult( IS_error, "GraphicsSceneController: Start drawing: Invalid tool.");
     }
-
+    isAllowPaint = true;
 }
 
 void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if ( !isAllowPaint && currentTool!=ToolsID::tool_eraser ) return;
+
     QPointF newPos = event->scenePos();
 
     switch( currentTool ){
@@ -78,7 +88,18 @@ void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case ToolsID::tool_circle :
                             set_Elipse_Item_points( currentItem, firstPoint, newPos );
                             break;
+    case ToolsID::tool_eraser :
+                            {
+                                QGraphicsItem *I = itemAt( newPos, QTransform() );
+                                if (I->type() == QGraphicsPixmapItem::Type ){
+                                    if ( selectGroup( 0 ) )            update( );
+                                }else{
+                                    if ( selectGroup( I->group() ) )   update( );
+                                }
+                            }
+                            break;
     default:
+
         er.ReturnResult( IS_error, "GraphicsSceneController: Drawing in process: Invalid tool.");
     }
 
@@ -88,29 +109,29 @@ void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphicsSceneController::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
-
+    isAllowPaint = false;
 }
 
 QGraphicsItem *GraphicsSceneController::get_pen_firstItem()
 {
-    QGraphicsLineItem *temp_item;
-    temp_item = new QGraphicsLineItem( QLineF( previousPoint, previousPoint ) );
+    MyLine *temp_item;
+    temp_item = new MyLine( QLineF( previousPoint, previousPoint ) );
     temp_item->setPen( currentPen );
     return temp_item;
 }
 
 QGraphicsItem *GraphicsSceneController::get_pen_newItem(const QPointF &newPoint)
 {
-    QGraphicsLineItem *temp_item;
-    temp_item = new QGraphicsLineItem( QLineF( previousPoint, newPoint ) );
+    MyLine *temp_item;
+    temp_item = new MyLine( QLineF( previousPoint, newPoint ) );
     temp_item->setPen( currentPen );
     return temp_item;
 }
 
 QGraphicsItem *GraphicsSceneController::get_brash_firstItem()
 {
-    QGraphicsLineItem *line;
-    line = new QGraphicsLineItem( QLineF( previousPoint, previousPoint ) );
+    MyLine *line;
+    line = new MyLine( QLineF( previousPoint, previousPoint ) );
     QPen pen;
     pen.setWidth(16);
     pen.setColor( QColor(255,215,0,150) );
@@ -121,8 +142,8 @@ QGraphicsItem *GraphicsSceneController::get_brash_firstItem()
 
 QGraphicsItem *GraphicsSceneController::get_line_firstItem()
 {
-    QGraphicsLineItem *line;
-    line = new QGraphicsLineItem( QLineF( firstPoint, firstPoint ) );
+    MyLine *line;
+    line = new MyLine( QLineF( firstPoint, firstPoint ) );
     line->setPen( currentPen );
     currentItem = line;
     return currentItem;
@@ -130,8 +151,8 @@ QGraphicsItem *GraphicsSceneController::get_line_firstItem()
 
 QGraphicsItem *GraphicsSceneController::get_rect_firstItem()
 {
-    QGraphicsRectItem *rect;
-    rect = new QGraphicsRectItem(firstPoint.x(), firstPoint.y(), 0, 0 );
+    MyRect *rect;
+    rect = new MyRect(firstPoint.x(), firstPoint.y(), 0, 0 );
     rect->setPen( currentPen );
     currentItem = rect;
     return currentItem;
@@ -139,8 +160,8 @@ QGraphicsItem *GraphicsSceneController::get_rect_firstItem()
 
 QGraphicsItem *GraphicsSceneController::get_elips_firstItem()
 {
-    QGraphicsEllipseItem *ellipse;
-    ellipse = new QGraphicsEllipseItem( firstPoint.x(), firstPoint.y(), 0, 0 );
+    MyElps *ellipse;
+    ellipse = new MyElps( firstPoint.x(), firstPoint.y(), 0, 0 );
     ellipse->setPen( currentPen );
     currentItem = ellipse;
     return currentItem;
@@ -148,19 +169,19 @@ QGraphicsItem *GraphicsSceneController::get_elips_firstItem()
 
 void GraphicsSceneController::set_Line_Item_points( QGraphicsItem *Item, const QPointF &start, const QPointF &finish)
 {
-    QGraphicsLineItem *L = (QGraphicsLineItem*)(Item);
+    MyLine *L = (MyLine*)(Item);
     L->setLine( QLineF( start, finish ) );
 }
 
 void GraphicsSceneController::set_Rect_Item_points(QGraphicsItem *Item, const QPointF &start, const QPointF &finish)
 {
-    QGraphicsRectItem *R = (QGraphicsRectItem*)(Item);
+    MyRect *R = (MyRect*)(Item);
     R->setRect( QRectF( start, finish ).normalized() );
 }
 
 void GraphicsSceneController::set_Elipse_Item_points(QGraphicsItem *Item, const QPointF &start, const QPointF &finish)
 {
-    QGraphicsEllipseItem *E = (QGraphicsEllipseItem*)(Item);
+    MyElps *E = (MyElps*)(Item);
     E->setRect( QRectF( start, finish ).normalized() );
 }
 

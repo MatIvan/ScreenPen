@@ -27,16 +27,23 @@ public:
     bool setGroupVisible( int index, bool visible );
     bool setGroupVisible( QGraphicsItemGroup* group, bool visible );
 
-    bool deleteGroup( QGraphicsItemGroup* group);
+    bool deleteGroup( QGraphicsItemGroup* group );
     bool deleteGroup( int index );
     bool deleteLastGroup();
     bool deleteGroupsFromIndex( int index ); //Удалить все группы от индекса до последней
+
+    bool selectGroup( QGraphicsItemGroup* gr );
+    QGraphicsItemGroup *GetSelectedGroup() { return pSelectedGroup; }
 
     int groupCount() const;
 
 private:
     QList<QGraphicsItemGroup*>   groups_list;
     QGraphicsItemGroup          *pCurrentGroup;
+    QGraphicsItemGroup          *pSelectedGroup;
+
+    void set_select ( QList<QGraphicsItem*> group_items, bool sel );
+
 
 protected:
     ErrorClass er;
