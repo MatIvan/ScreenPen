@@ -1,4 +1,6 @@
 #include "groupscene.h"
+#include <QDebug>
+#include <QGraphicsSceneHoverEvent>
 
 GroupScene::GroupScene(QObject *parent)
     : QGraphicsScene( parent )
@@ -16,7 +18,9 @@ GroupScene::~GroupScene()
 
 void GroupScene::newGroup()
 {
-    pCurrentGroup = createItemGroup( QList<QGraphicsItem*>() );
+    pCurrentGroup = (HoverGroup*)( createItemGroup( QList<QGraphicsItem*>() ) );
+    pCurrentGroup->setAcceptHoverEvents(true);
+    pCurrentGroup->setFiltersChildEvents( true );
     groups_list.append( pCurrentGroup );
 }
 
@@ -44,7 +48,7 @@ bool GroupScene::setGroupVisible(int index, bool visible)
     return er.ReturnResult( NO_error );
 }
 
-bool GroupScene::setGroupVisible(QGraphicsItemGroup *group, bool visible)
+bool GroupScene::setGroupVisible(HoverGroup *group, bool visible)
 {
     if ( !groups_list.contains( group ) )
         return er.ReturnResult( IS_error , " GroupScene: Cannot set visible property. Have no this group in list. ");
@@ -56,7 +60,7 @@ bool GroupScene::setGroupVisible(QGraphicsItemGroup *group, bool visible)
     return er.ReturnResult( NO_error );
 }
 
-bool GroupScene::deleteGroup(QGraphicsItemGroup *group)
+bool GroupScene::deleteGroup(HoverGroup *group)
 {
     if ( !groups_list.contains( group ) )
         return er.ReturnResult( IS_error , " GroupScene: Cannot delete group. Have no this group in list. ");
@@ -111,3 +115,26 @@ void GroupScene::clear()
     deleteGroupsFromIndex(0);
     QGraphicsScene::clear();
 }
+
+HoverGroup::HoverGroup(QGraphicsItem *parent)
+    : QGraphicsItemGroup(parent)
+{
+    setAcceptHoverEvents( true );
+    setFiltersChildEvents( true );
+}
+
+void HoverGroup::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    qDebug() << "HoverGroup "<< event->pos();
+    QGraphicsItem::hoverMoveEvent(event);
+}
+
+bool HoverGroup::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
+{
+    Q_UNUSED(watched);
+
+    if(event->type() == QEvent::GraphicsSceneHoverMove)
+        qDebug()<<"HoverGroup "<<event;
+    return false;
+}
+

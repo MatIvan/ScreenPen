@@ -12,6 +12,17 @@
 
 class ErrorClass;
 
+class HoverGroup : public QGraphicsItemGroup
+{
+public:
+    HoverGroup( QGraphicsItem *parent = nullptr );
+    ~HoverGroup(){}
+
+protected:
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
+};
+
 class GroupScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -25,9 +36,9 @@ public:
     bool appendItemToNewGroup( QGraphicsItem *item );
 
     bool setGroupVisible( int index, bool visible );
-    bool setGroupVisible( QGraphicsItemGroup* group, bool visible );
+    bool setGroupVisible( HoverGroup* group, bool visible );
 
-    bool deleteGroup( QGraphicsItemGroup* group);
+    bool deleteGroup( HoverGroup* group);
     bool deleteGroup( int index );
     bool deleteLastGroup();
     bool deleteGroupsFromIndex( int index ); //Удалить все группы от индекса до последней
@@ -35,8 +46,8 @@ public:
     int groupCount() const;
 
 private:
-    QList<QGraphicsItemGroup*>   groups_list;
-    QGraphicsItemGroup          *pCurrentGroup;
+    QList<HoverGroup*>   groups_list;
+    HoverGroup          *pCurrentGroup;
 
 protected:
     ErrorClass er;

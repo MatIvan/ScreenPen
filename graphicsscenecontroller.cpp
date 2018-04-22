@@ -7,11 +7,13 @@
 GraphicsSceneController::GraphicsSceneController(QObject *parent)
     : GroupScene( parent )
 {
+    isAllowPaint = false;
     currentTool = ToolsID::tool_pen;
 
     currentPen.setColor( QColor("red") );
     currentPen.setWidth( 4 );
     currentPen.setCapStyle( Qt::RoundCap );
+
 }
 
 GraphicsSceneController::~GraphicsSceneController()
@@ -57,11 +59,14 @@ void GraphicsSceneController::mousePressEvent(QGraphicsSceneMouseEvent *event)
     default:
         er.ReturnResult( IS_error, "GraphicsSceneController: Start drawing: Invalid tool.");
     }
+    isAllowPaint = true;
 
 }
 
 void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!isAllowPaint) return;
+
     QPointF newPos = event->scenePos();
 
     switch( currentTool ){
@@ -88,29 +93,29 @@ void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphicsSceneController::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
-
+    isAllowPaint=false;
 }
 
 QGraphicsItem *GraphicsSceneController::get_pen_firstItem()
 {
-    QGraphicsLineItem *temp_item;
-    temp_item = new QGraphicsLineItem( QLineF( previousPoint, previousPoint ) );
+    HoverLine *temp_item;
+    temp_item = new HoverLine( QLineF( previousPoint, previousPoint ) );
     temp_item->setPen( currentPen );
     return temp_item;
 }
 
 QGraphicsItem *GraphicsSceneController::get_pen_newItem(const QPointF &newPoint)
 {
-    QGraphicsLineItem *temp_item;
-    temp_item = new QGraphicsLineItem( QLineF( previousPoint, newPoint ) );
+    HoverLine *temp_item;
+    temp_item = new HoverLine( QLineF( previousPoint, newPoint ) );
     temp_item->setPen( currentPen );
     return temp_item;
 }
 
 QGraphicsItem *GraphicsSceneController::get_brash_firstItem()
 {
-    QGraphicsLineItem *line;
-    line = new QGraphicsLineItem( QLineF( previousPoint, previousPoint ) );
+    HoverLine *line;
+    line = new HoverLine( QLineF( previousPoint, previousPoint ) );
     QPen pen;
     pen.setWidth(16);
     pen.setColor( QColor(255,215,0,150) );
@@ -121,8 +126,8 @@ QGraphicsItem *GraphicsSceneController::get_brash_firstItem()
 
 QGraphicsItem *GraphicsSceneController::get_line_firstItem()
 {
-    QGraphicsLineItem *line;
-    line = new QGraphicsLineItem( QLineF( firstPoint, firstPoint ) );
+    HoverLine *line;
+    line = new HoverLine( QLineF( firstPoint, firstPoint ) );
     line->setPen( currentPen );
     currentItem = line;
     return currentItem;
@@ -148,7 +153,7 @@ QGraphicsItem *GraphicsSceneController::get_elips_firstItem()
 
 void GraphicsSceneController::set_Line_Item_points( QGraphicsItem *Item, const QPointF &start, const QPointF &finish)
 {
-    QGraphicsLineItem *L = (QGraphicsLineItem*)(Item);
+    HoverLine *L = (HoverLine*)(Item);
     L->setLine( QLineF( start, finish ) );
 }
 
@@ -174,3 +179,4 @@ void GraphicsSceneController::setPen(QPen new_pen)
     currentPen = new_pen;
     currentPen.setCapStyle( Qt::RoundCap );
 }
+
