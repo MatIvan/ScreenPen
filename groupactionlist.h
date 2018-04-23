@@ -7,12 +7,14 @@
 class QGraphicsItemGroup;
 
 enum GroupActions{
+    NOOP,
     CREATE,
     DELETE
 };
 
 struct GroupAction
 {
+    GroupAction( GroupActions GA = NOOP ) {ActionType = GA; }
     GroupActions ActionType;
     QGraphicsItemGroup *Group;
 };
@@ -25,8 +27,8 @@ public:
     virtual ~GroupActionList(){}
 
     void AddGroupAction(GroupActions group_act, QGraphicsItemGroup *Group );
-    void undo();
-    void redo();
+    GroupAction undo();
+    GroupAction redo();
 
 private:
     QList<GroupAction> MainList;

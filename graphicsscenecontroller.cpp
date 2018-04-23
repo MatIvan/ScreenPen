@@ -60,7 +60,10 @@ void GraphicsSceneController::mousePressEvent(QGraphicsSceneMouseEvent *event)
                             appendItemToNewGroup( get_elips_firstItem() );
                             break;
     case ToolsID::tool_eraser :
-                            if (GetSelectedGroup()) setGroupVisible( GetSelectedGroup(), false );
+                            if (GetSelectedGroup()){
+                                setGroupVisible( GetSelectedGroup(), false );
+                                GAList.AddGroupAction( DELETE, GetSelectedGroup() );
+                            }
                             break;
     default:
         er.ReturnResult( IS_error, "GraphicsSceneController: Start drawing: Invalid tool.");
@@ -91,6 +94,7 @@ void GraphicsSceneController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case ToolsID::tool_eraser :
                             {
                                 QGraphicsItem *I = itemAt( newPos, QTransform() );
+                                if (I==0) break;
                                 if (I->type() == QGraphicsPixmapItem::Type ){
                                     if ( selectGroup( 0 ) )            update( );
                                 }else{

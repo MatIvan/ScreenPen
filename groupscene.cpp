@@ -59,9 +59,7 @@ bool GroupScene::setGroupVisible(QGraphicsItemGroup *group, bool visible)
     for( int i=0; i<group_items.size(); i++ ){
         group_items.at(i)->setVisible( visible );
     }
-    if (!visible){
-        GAList.AddGroupAction( DELETE, group );
-    }
+
     return er.ReturnResult( NO_error );
 }
 
@@ -146,10 +144,38 @@ void GroupScene::clear()
 
 void GroupScene::undo()
 {
-    GAList.undo();
+    GroupAction ga = GAList.undo();
+    switch (ga.ActionType) {
+    case GroupActions::NOOP :
+            return;
+        break;
+    case GroupActions::CREATE :
+            setGroupVisible( ga.Group, false );
+        break;
+    case GroupActions::DELETE :
+            setGroupVisible( ga.Group, true );
+        break;
+    default:
+        //
+        break;
+    }
 }
 
 void GroupScene::redo()
 {
-    GAList.redo();
+    GroupAction ga = GAList.redo();
+    switch (ga.ActionType) {
+    case GroupActions::NOOP :
+            return;
+        break;
+    case GroupActions::CREATE :
+            setGroupVisible( ga.Group, true );
+        break;
+    case GroupActions::DELETE :
+            setGroupVisible( ga.Group, false );
+        break;
+    default:
+        //
+        break;
+    }
 }

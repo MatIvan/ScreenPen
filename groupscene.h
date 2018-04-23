@@ -41,13 +41,12 @@ private:
     QList<QGraphicsItemGroup*>   groups_list;
     QGraphicsItemGroup          *pCurrentGroup;
     QGraphicsItemGroup          *pSelectedGroup;
-    GroupActionList             GAList;
-
     void set_select ( QList<QGraphicsItem*> group_items, bool sel );
 
 
 protected:
     ErrorClass er;
+    GroupActionList             GAList;
 
 private slots:
     void slot_error();

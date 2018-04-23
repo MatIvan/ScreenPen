@@ -1,6 +1,7 @@
 #include "groupactionlist.h"
 
 #include <QList>
+#include <QDebug>
 
 GroupActionList::GroupActionList(QObject *parent)
     : QObject(parent)
@@ -20,6 +21,7 @@ void GroupActionList::AddGroupAction(GroupActions group_act, QGraphicsItemGroup 
 
     MainList.append( ga );
     current_index = MainList.size();
+    //qDebug() << "AddGroupAction > ind=" << current_index << " size=" << MainList.size();
 }
 
 void GroupActionList::delete_last_action()
@@ -29,13 +31,18 @@ void GroupActionList::delete_last_action()
     MainList.removeLast();
 }
 
-void GroupActionList::undo()
+GroupAction GroupActionList::undo()
 {
-    //current_index--
-
+    //qDebug() << "undo > ind=" << current_index << " size=" << MainList.size();
+    if (current_index==1) return GroupAction(NOOP);
+    current_index--;
+    return MainList.at(current_index);
 }
 
-void GroupActionList::redo()
+GroupAction GroupActionList::redo()
 {
-
+    //qDebug() << "redo > ind=" << current_index << " size=" << MainList.size();
+    if( current_index==MainList.size() ) return GroupAction(NOOP);
+    current_index++;
+    return MainList.at(current_index-1);
 }
