@@ -48,6 +48,9 @@ private slots:
     void ToolToggled(int id, bool checked);
     void PenChanged();
 
+public slots:
+    void onUndoRedoUpdated( bool isUndo, bool isRedo );
+
 protected:
     virtual void closeEvent(QCloseEvent *) override;
 
@@ -57,9 +60,7 @@ signals:
     void changedPen( QPen new_pen );
     void undo();
     void redo();
-
-public slots:
-
+    void saveToFile();
 };
 
 #endif // TOOLSPANEL_H

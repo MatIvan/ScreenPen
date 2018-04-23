@@ -59,7 +59,7 @@ public slots:
 
 signals:
     void SignalError( const ErrorClass &error);
-
+    void SignalUndoRedo( bool isUndo, bool isRedo );
 };
 
 #endif // GROUPSCENE_H

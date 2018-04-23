@@ -30,6 +30,7 @@ public slots:
 
     void start();
     void stop();
+    void saveToFile();
 
     void changeCursor( int tool_id );
 

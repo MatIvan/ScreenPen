@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QDialog>
+#include <QFileDialog>
 
 FullScreen::FullScreen(QWidget *parent)
     : QMainWindow(parent)
@@ -33,10 +34,15 @@ FullScreen::FullScreen(QWidget *parent)
 
     connect( tools, SIGNAL(undo()), controller, SLOT(undo()) );
     connect( tools, SIGNAL(redo()), controller, SLOT(redo()) );
+    connect( controller, SIGNAL(SignalUndoRedo(bool,bool)),
+             tools, SLOT(onUndoRedoUpdated(bool,bool)) );
+
+    connect( tools, SIGNAL(saveToFile()), this, SLOT(saveToFile()) );
 
     setCentralWidget( viewer );
     start();
     changeCursor( ToolsID::tool_pen );
+
 }
 
 FullScreen::~FullScreen()
@@ -63,6 +69,19 @@ void FullScreen::stop()
     tools->hide();
     hide();
     controller->clear();
+}
+
+void FullScreen::saveToFile()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save PNG picture "), "",
+            tr("PNG (*.png);;All Files (*)"));
+    if ( fileName.isEmpty() ) return;
+
+    QImage image(viewer->width(), viewer->height(), QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&image);
+    viewer->render(&painter);
+    image.save(fileName);
 }
 
 void FullScreen::changeCursor(int tool_id)

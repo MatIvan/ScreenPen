@@ -34,10 +34,11 @@ private:
     QList<GroupAction> MainList;
     int current_index;
     void delete_last_action();
+    void update_state();
 
 signals:
     void delete_forever( QGraphicsItemGroup *Group );
-
+    void updated( bool isUndo, bool isRedo );
 };
 
 #endif // GROUPACTIONLIST_H

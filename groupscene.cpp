@@ -10,6 +10,9 @@ GroupScene::GroupScene(QObject *parent)
     connect( &GAList, SIGNAL( delete_forever( QGraphicsItemGroup* ) ),
              this, SLOT( deleteGroup( QGraphicsItemGroup* ) ) );
 
+    connect( &GAList, SIGNAL(updated(bool,bool)),
+             this, SIGNAL(SignalUndoRedo(bool,bool)) );
+
     er.ReturnResult( NO_error );
 }
 

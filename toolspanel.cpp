@@ -98,9 +98,11 @@ ToolsPanel::ToolsPanel(QWidget *parent, Qt::WindowFlags f)
     connect(pCB_width , SIGNAL(currentTextChanged(QString)) ,
             this, SLOT(PenChanged()) );
     connect(pBtn_undo, SIGNAL(clicked()),
-            this, SIGNAL(undo()) );
+            this, SIGNAL( undo()) );
     connect(pBtn_redo, SIGNAL(clicked()),
             this, SIGNAL(redo()) );
+    connect(pBtn_save, SIGNAL(clicked()),
+            this, SIGNAL(saveToFile()));
 }
 
 ToolsPanel::~ToolsPanel()
@@ -122,7 +124,14 @@ void ToolsPanel::PenChanged()
     emit changedPen( pen );
 }
 
+void ToolsPanel::onUndoRedoUpdated(bool isUndo, bool isRedo)
+{
+    pBtn_undo->setEnabled( isUndo );
+    pBtn_redo->setEnabled( isRedo );
+}
+
 void ToolsPanel::closeEvent(QCloseEvent *)
 {
     emit closeToolPanel();
 }
+

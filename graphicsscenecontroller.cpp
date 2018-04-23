@@ -4,6 +4,7 @@
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QDebug>
+#include <QPainter>
 
 #include "mygraphicsitems.h"
 
@@ -34,7 +35,6 @@ bool GraphicsSceneController::grab_desktop()
     //     пришлось добавить коэффициоенты +40 и +5
     temp_item->moveBy(- desktop_pixmap.width()/2.0 +40,
                       - desktop_pixmap.height()/2.0 +5);
-
     return appendItemToNewGroup( temp_item );
 }
 

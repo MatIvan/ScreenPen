@@ -21,6 +21,7 @@ void GroupActionList::AddGroupAction(GroupActions group_act, QGraphicsItemGroup 
 
     MainList.append( ga );
     current_index = MainList.size();
+    update_state();
     //qDebug() << "AddGroupAction > ind=" << current_index << " size=" << MainList.size();
 }
 
@@ -31,11 +32,20 @@ void GroupActionList::delete_last_action()
     MainList.removeLast();
 }
 
+void GroupActionList::update_state()
+{
+    bool isUndo, isRedo;
+    isUndo = (current_index>1);
+    isRedo = (MainList.size() > current_index);
+    emit updated( isUndo, isRedo );
+}
+
 GroupAction GroupActionList::undo()
 {
     //qDebug() << "undo > ind=" << current_index << " size=" << MainList.size();
     if (current_index==1) return GroupAction(NOOP);
     current_index--;
+    update_state();
     return MainList.at(current_index);
 }
 
@@ -44,5 +54,6 @@ GroupAction GroupActionList::redo()
     //qDebug() << "redo > ind=" << current_index << " size=" << MainList.size();
     if( current_index==MainList.size() ) return GroupAction(NOOP);
     current_index++;
+    update_state();
     return MainList.at(current_index-1);
 }
