@@ -29,6 +29,7 @@ public:
     void AddGroupAction(GroupActions group_act, QGraphicsItemGroup *Group );
     GroupAction undo();
     GroupAction redo();
+    void clear();
 
 private:
     QList<GroupAction> MainList;

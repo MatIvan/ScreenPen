@@ -38,6 +38,7 @@ FullScreen::FullScreen(QWidget *parent)
              tools, SLOT(onUndoRedoUpdated(bool,bool)) );
 
     connect( tools, SIGNAL(saveToFile()), this, SLOT(saveToFile()) );
+    connect( tools, SIGNAL(clear()), controller, SLOT(clear()) );
 
     setCentralWidget( viewer );
     start();

@@ -57,3 +57,10 @@ GroupAction GroupActionList::redo()
     update_state();
     return MainList.at(current_index-1);
 }
+
+void GroupActionList::clear()
+{
+    current_index = 0;
+    MainList.clear();
+    update_state();
+}

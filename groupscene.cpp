@@ -141,8 +141,8 @@ void GroupScene::slot_error()
 
 void GroupScene::clear()
 {
-    deleteGroupsFromIndex(0);
-    QGraphicsScene::clear();
+    deleteGroupsFromIndex(1);
+    GAList.clear();
 }
 
 void GroupScene::undo()

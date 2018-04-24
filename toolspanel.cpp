@@ -103,6 +103,7 @@ ToolsPanel::ToolsPanel(QWidget *parent, Qt::WindowFlags f)
             this, SIGNAL(redo()) );
     connect(pBtn_save, SIGNAL(clicked()),
             this, SIGNAL(saveToFile()));
+    connect(pBtn_clear, SIGNAL(clicked()), this, SIGNAL(clear()) );
 }
 
 ToolsPanel::~ToolsPanel()

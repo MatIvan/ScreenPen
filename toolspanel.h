@@ -61,6 +61,7 @@ signals:
     void undo();
     void redo();
     void saveToFile();
+    void clear();
 };
 
 #endif // TOOLSPANEL_H
